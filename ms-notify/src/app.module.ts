@@ -2,16 +2,17 @@ import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import configs from './config/configuration';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: String(process.env.ALT_SERVICE_NAME),
+        name: configs.services.msNotify,
         transport: Transport.REDIS,
         options: {
-          host: 'localhost',
-          port: 6379,
+          host: configs.redis.host,
+          port: configs.redis.port,
         },
       },
     ]),

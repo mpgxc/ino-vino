@@ -2,6 +2,7 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
+import configs from './config/configuration';
 
 const logger = new Logger('Blog');
 
@@ -11,8 +12,8 @@ const logger = new Logger('Blog');
     {
       transport: Transport.REDIS,
       options: {
-        host: '127.0.0.1',
-        port: 6379,
+        host: configs.redis.host,
+        port: configs.redis.port,
       },
     },
   );

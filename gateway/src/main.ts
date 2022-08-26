@@ -1,6 +1,10 @@
-import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import configs from './config/configuration';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('Blog');
 
 (async () => {
   const app = await NestFactory.create(AppModule);
@@ -8,16 +12,16 @@ import { AppModule } from './app.module';
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.REDIS,
     options: {
-      host: '127.0.0.1',
-      port: 6379,
+      host: configs.redis.host,
+      port: configs.redis.port,
     },
   });
 
   app.startAllMicroservices().then(() => {
-    console.log('MICROSERVICE is running!');
+    logger.log('MICROSERVICE is running!');
   });
 
   app.listen(process.env.APP_PORT || 3000).then(() => {
-    console.log('HTTP is running!');
+    logger.log('HTTP is running!');
   });
 })();
