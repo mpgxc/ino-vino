@@ -1,20 +1,18 @@
 import { Controller } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
+import { AppGateway } from 'app.gateway';
 import { AppService } from 'app.service';
-
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly appGateway: AppGateway,
+  ) {}
 
   @EventPattern('command-created')
   async subscribe(data: Record<string, unknown>) {
-    console.log(data);
-
-    await delay(3000);
+    this.appGateway.publish('notify', data);
 
     this.appService.publish({
       message: 'command-created:finish',

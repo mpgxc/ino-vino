@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AppGateway } from 'app.gateway';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configs from './config/configuration';
@@ -18,6 +19,6 @@ import configs from './config/configuration';
     ]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppGateway],
 })
 export class AppModule {}

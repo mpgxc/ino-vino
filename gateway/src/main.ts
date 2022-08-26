@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 import configs from './config/configuration';
 import { Logger } from '@nestjs/common';
 
-const logger = new Logger('Blog');
+const logger = new Logger('gateway');
 
 (async () => {
   const app = await NestFactory.create(AppModule);

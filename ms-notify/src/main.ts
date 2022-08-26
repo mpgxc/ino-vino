@@ -1,24 +1,27 @@
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import configs from './config/configuration';
+import { Logger } from '@nestjs/common';
 
-const logger = new Logger('Blog');
+const logger = new Logger('ms-notify');
 
 (async () => {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.REDIS,
-      options: {
-        host: configs.redis.host,
-        port: configs.redis.port,
-      },
-    },
-  );
+  const app = await NestFactory.create(AppModule);
 
-  app.listen().then(() => {
-    logger.log('Microservice is listening');
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.REDIS,
+    options: {
+      host: configs.redis.host,
+      port: configs.redis.port,
+    },
+  });
+
+  app.startAllMicroservices().then(() => {
+    logger.log('MICROSERVICE is running!');
+  });
+
+  app.listen(process.env.APP_PORT || 300).then(() => {
+    logger.log('HTTP is running!');
   });
 })();
