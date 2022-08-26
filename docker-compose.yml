@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  ms-redis:
+    image: redis:6.2-alpine
+    container_name: ms-redis
+    restart: always
+    ports:
+      - '${REDIS_PORT}:${REDIS_PORT}'
+    command: redis-server --appendonly yes
+    volumes:
+      - redis:/data
+      
+volumes:
+  redis:
+    driver: local
