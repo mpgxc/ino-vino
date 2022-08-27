@@ -1,9 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Logger, Post } from '@nestjs/common';
 import { EventPattern } from '@nestjs/microservices';
 import { AppService } from './app.service';
 
 @Controller('notify')
 export class AppController {
+  private logger = new Logger(AppController.name);
+
   constructor(private readonly appService: AppService) {}
 
   @Post('/publish-event')
@@ -13,6 +15,6 @@ export class AppController {
 
   @EventPattern('command-created:finish')
   async subscribe(data: Record<string, unknown>) {
-    console.log(data);
+    this.logger.log(data);
   }
 }
