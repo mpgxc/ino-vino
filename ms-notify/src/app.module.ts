@@ -11,10 +11,7 @@ import configs from './config/configuration';
       {
         name: configs.services.msNotify,
         transport: Transport.REDIS,
-        options: {
-          host: configs.redis.host,
-          port: configs.redis.port,
-        },
+        options: configs.redisOptions,
       },
     ]),
   ],
