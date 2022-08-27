@@ -3,13 +3,13 @@
 <head>
   <script src="https://cdn.socket.io/4.3.2/socket.io.min.js" crossorigin="anonymous"></script>
   <script>
-    const socketx = io('http://localhost:3001');
+    const socket = io('http://localhost:3001/notify');
 
-    socketx.on('connect', () => {
+    socket.on('connect', () => {
       console.log('Cliente conectado!');
     });
 
-    socketx.on('notify', (data) => {
+    socket.on('notify', (data) => {
       if (data.event) {
         content.innerHTML += `
         <pre>${JSON.stringify(data, null, 2)}</pre>
@@ -17,11 +17,11 @@
       }
     });
 
-    socketx.on('exception', (data) => {
+    socket.on('exception', (data) => {
       console.log('event', data);
     });
 
-    socketx.on('disconnect', () => {
+    socket.on('disconnect', () => {
       console.log('Disconectado!');
     });
   </script>

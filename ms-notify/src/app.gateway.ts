@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   WebSocketServer,
   WebSocketGateway,
@@ -6,31 +6,38 @@ import {
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
-  cors: {
-    origin: '*',
-  },
+  cors: true,
+  namespace: '/notify',
 })
 @Injectable()
 export class AppGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server!: Server;
 
-  async handleConnection() {
+  private logger = new Logger(AppGateway.name);
+
+  handleConnection(client: Socket) {
     this.server.emit('notify', {
       connect: true,
+      client: client.id,
     });
+
+    this.logger.log(`Client Connection: ${client.id}`);
   }
 
-  async handleDisconnect() {
+  handleDisconnect(client: Socket) {
     this.server.emit('notify', {
-      disconnect: true,
+      connect: false,
+      client: client.id,
     });
+
+    this.logger.log(`Client Disconnection: ${client.id}`);
   }
 
-  async publish(chanel: string, data: Record<string, unknown>) {
+  publish(chanel: string, data: Record<string, unknown>) {
     this.server.emit(chanel, data);
   }
 }
